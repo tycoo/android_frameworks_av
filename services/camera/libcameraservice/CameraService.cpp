@@ -625,9 +625,11 @@ status_t CameraService::getCameraVendorTagDescriptor(/*out*/sp<VendorTagDescript
         ALOGE("%s: camera hardware module doesn't exist", __FUNCTION__);
         return -ENODEV;
     }
-
-    desc = VendorTagDescriptor::getGlobalVendorTagDescriptor();
-    return OK;
+    sp<VendorTagDescriptor> globalDescriptor = VendorTagDescriptor::getGlobalVendorTagDescriptor();
+    if (globalDescriptor != nullptr) {
+        *desc = *(globalDescriptor.get());
+    }
+    return Status::ok();
 }
 
 int CameraService::getDeviceVersion(int cameraId, int* facing) {
